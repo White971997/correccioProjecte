@@ -17,8 +17,13 @@
         $connect = mysqli_connect ($host, $user, $pass, $db) or die ("Error de Connexió");
                 
         // Sentencia SQL a executar
-        $sentenciasql = "DELETE FROM users WHERE idUser = '$idUserBorrar'; ";
-        $sql= mysqli_query($connect, $sentenciasql);
+        $sentenciasql = "DELETE FROM users WHERE idUser = ?; ";
+        $stmt = $connect->prepare($sentenciasql); 
+        $stmt->bind_param("i", $idUserBorrar );
+        $stmt->execute();
+        $result = $stmt->get_result(); 
+        //echo $stmt->error;
+       // $sql= mysqli_query($connect, $sentenciasql);
         header('Location: veureUsuari.php');
         
         

@@ -77,9 +77,9 @@ echo '
     // Sentencia SQL a executar
     $sentenciasql = "SELECT * FROM users; ";
     
-    $sql= mysqli_query($connect, $sentenciasql);
-
-    $rowCount = mysqli_num_rows($sql);
+    $stmt = $connect->prepare($sentenciasql); 
+    $stmt->execute();
+    $result = $stmt->get_result(); 
     
     echo'<div style="margin-left: 2%; margin-right: 2%;">
         <table class="table">
@@ -97,7 +97,7 @@ echo '
                 <th scope="col"></th>
                 </tr>
             </thead>';
-    while($mostrar=mysqli_fetch_array($sql)){
+    while($mostrar = $result->fetch_assoc()){
         
                 echo '
                 <tr>

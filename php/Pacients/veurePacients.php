@@ -64,7 +64,8 @@ echo '
     
     function veurepacients()
     {
-        $cBarri = $_GET['CodiPostalBarri'];
+       
+       $cBarri = $_GET['CodiPostalBarri'];
 
         
         // Variables connexió MySQL

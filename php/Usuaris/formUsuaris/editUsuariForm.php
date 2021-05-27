@@ -78,12 +78,16 @@ $error = "";
 $connect = mysqli_connect ($host, $user, $pass, $db) or die ("Error de Connexió");
         
 // Sentencia SQL a executar
-$sentenciasql = "SELECT * FROM users WHERE idUser = '$idUser'; ";
+$sentenciasql = "SELECT * FROM users WHERE idUser = ?; ";
 
-$sql= mysqli_query($connect, $sentenciasql);
+$stmt = $connect->prepare($sentenciasql); 
+$stmt->bind_param("i", $idUser );
+$stmt->execute();
+$result = $stmt->get_result(); 
+//$sql= mysqli_query($connect, $sentenciasql);
 
-$rowCount = mysqli_num_rows($sql);
-while($mostrar=mysqli_fetch_array($sql)){
+//$rowCount = mysqli_num_rows($sentenciasql);
+while($mostrar = $result->fetch_assoc()){
     echo '
     <div class="container">
     <form action="../editUsuari.php" method="POST" name="editusuari">

@@ -3,18 +3,21 @@ editPacient();
     
     
 function editPacient()
-{
+{ 
+    //seguretat de scripts
+    require_once("../class.inputfilter.php");
+    $ifilter = new InputFilter();
 
 // Variables amb els camps del formulari
-    $idUsuari = $_POST['idU'];
-    $nom = $_POST['nomU'];
-    $cognoms = $_POST['cognomsU'];
-    $dni = $_POST['dniU'];
+    $idUsuari = $ifilter->process($_POST['idU']);
+    $nom = $ifilter->process($_POST['nomU']);
+    $cognoms = $ifilter->process($_POST['cognomsU']);
+    $dni = $ifilter->process($_POST['dniU']);
     $dataNaixament = $_POST['dataNaixamentU'];
     $dataRegistre = $_POST['dataRegistreU'];
-    $username = $_POST['usernameU'];
-    $password = $_POST['contrasenyaU'];
-    $email = $_POST['emailU'];
+    $username = $ifilter->process($_POST['usernameU']);
+    $password =$ifilter->process($_POST['contrasenyaU']) ;
+    $email = $ifilter->process($_POST['emailU']);
 
 // Variables connexió MySQL
     $host = "localhost";
@@ -23,13 +26,17 @@ function editPacient()
     $db = "projectefinal";
     $error = "";
 // Realitzem la connexió amb la base de dades
-    $connect = mysqli_connect ($host, $user, $pass, $db) or die ("Error de Connexió");
+    $connect = mysqli_connect($host, $user, $pass, $db) or die ("Error de Connexió");
     
-$sentenciasql = "UPDATE users SET Nom= '$nom', Cognoms = '$cognoms', DNI = '$dni', DataNaixament ='$dataNaixament', DataRegistro ='$dataRegistre', Username = '$username',
-Contrasenya ='$password', Email ='$email'
-WHERE users.idUser = '$idUsuari'; ";
+$sentenciasql = "UPDATE users SET Nom= ?, Cognoms = ?, DNI = ?, DataNaixament =?, DataRegistro =?, Username = ?,Contrasenya =?, Email =? 
+WHERE users.idUser = ?; ";
 
-$sql= mysqli_query($connect, $sentenciasql);        
+    $stmt = $connect->prepare($sentenciasql); 
+    $stmt->bind_param("ssssssssi", $nom, $cognoms, $dni, $dataNaixament, $dataRegistre, $username, $password, $email ,$idUsuari );
+    $stmt->execute();
+    $result = $stmt->get_result(); 
+//echo $stmt->error;
+//$sql= mysqli_query($connect, $sentenciasql);        
 header('Location: veureUsuari.php');
 }
 ?>
